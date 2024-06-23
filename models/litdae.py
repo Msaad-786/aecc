@@ -17,7 +17,7 @@ class LitDAE(pl.LightningModule):
     Denoising Autoencoder (DAE) Pytorch Lightning module.
     """
 
-    def __init__(self, model, cfg, optimizer, criterion, lr_scheduler) -> None:
+    def __init__(self, convmodel, cfg, optimizer, criterion, lr_scheduler) -> None:
         """
         Initialize the DAE.
 
@@ -30,7 +30,7 @@ class LitDAE(pl.LightningModule):
         """
         super().__init__()
 
-        self.model = model
+        self.model = convmodel
         self.optimizer = optimizer
         self.lr_scheduler = lr_scheduler
         self.cfg = cfg

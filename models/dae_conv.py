@@ -13,13 +13,13 @@ import torch.nn as nn
 
 from utils import RayleighChannel
 
-from .decoder import ConvDecoder
-from .encoder import ConvEncoder
+from .decoderconv import ConvDecoder
+from .encoderconv import ConvEncoder
 
 
 class CAEConv(nn.Module):
     """
-    CAEConv is a Denoising AutoEncoder model that leverages Convolutional Neural Network (CNN)
+    CAEConv is a Denoising AutoEncoder convmodel that leverages Convolutional Neural Network (CNN)
     architecture. It consists of an encoder and a decoder, both of which are based on CNNs.
 
     Attributes:
@@ -27,7 +27,7 @@ class CAEConv(nn.Module):
         transforming the input image into a lower-dimensional representation.
         decoder (ConvDecoder): The decoder part of the autoencoder. It reconstructs the original image from the lower-dimensional representation produced by the encoder.
 
-    The CAEConv model is initialized with several parameters that define the structure and behavior
+    The CAEConv convmodel is initialized with several parameters that define the structure and behavior
     of the encoder and decoder. These parameters include the number of input channels, the size of
     the input image, the size of the kernels, the number of convolutional layers and channels in the
     encoder and decoder, the gate function for the decoder, and the noise factor for the input image.
@@ -44,7 +44,7 @@ class CAEConv(nn.Module):
         noise_factor=0.2,
     ) -> None:
         """
-        Initializes the CAEConv model with the given parameters.
+        Initializes the CAEConv convmodel with the given parameters.
 
         Args:
             in_channels (int, optional): The number of channels in the input image.
@@ -92,48 +92,48 @@ class CAEConv(nn.Module):
 
 
 def dae_conv_tiny(**kwargs):
-    model = CAEConv(
+    convmodel = CAEConv(
         encoder_channels=(32, 64, 128),
         decoder_channels=(128, 64, 32),
         **kwargs
     )
-    return model
+    return convmodel
 
 
 def dae_conv_small(**kwargs):
-    model = CAEConv(
+    convmodel = CAEConv(
         encoder_channels=(64, 128, 256),
         decoder_channels=(256, 128, 64),
         **kwargs
     )
-    return model
+    return convmodel
 
 
 def dae_conv_base(**kwargs):
-    model = CAEConv(
+    convmodel = CAEConv(
         encoder_channels=(128, 256, 512),
         decoder_channels=(512, 256, 128),
         **kwargs
     )
-    return model
+    return convmodel
 
 
 def dae_conv_large(**kwargs):
-    model = CAEConv(
+    convmodel = CAEConv(
         encoder_channels=(256, 512, 1024),
         decoder_channels=(1024, 512, 256),
         **kwargs
     )
-    return model
+    return convmodel
 
 
 def dae_conv_huge(**kwargs):
-    model = CAEConv(
+    convmodel = CAEConv(
         encoder_channels=(512, 1024, 2048),
         decoder_channels=(2048, 1024, 512),
         **kwargs
     )
-    return model
+    return convmodel
 
 
 dae_conv_models = {
