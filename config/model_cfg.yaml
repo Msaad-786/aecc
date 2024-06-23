@@ -38,7 +38,7 @@
 #   decoder_layer: 16
 #   decoder_head: 16
 
-  dae_conv_tiny:
+dae_conv_tiny:
   model_name: "dae_conv_tiny"
   in_channels: 3
   img_size: 224
