@@ -23,7 +23,7 @@ from torchmetrics import MeanSquaredError
 
 from config import get_cfg, get_defaults
 from data import *
-from models import DAEViT, LitDAE, dae_vit_models
+from models import CAEConv, LitDAE, dae_conv_models
 from utils import EMACallback, SimplifiedProgressBar
 
 # Common setup
@@ -68,7 +68,7 @@ def train(
         )
 
     # Get the model
-    model = DAEViT(
+    model = CAEConv(
         in_channels=cfg.in_channels,
         img_size=cfg.img_size,
         patch_size=cfg.patch_size,
@@ -202,7 +202,7 @@ if __name__ == "__main__":
         "--model-name",
         type=str,
         required=True,
-        help="Name of the model (dae_vit_tiny, dae_vit_small, dae_vit_base, dae_vit_large, dae_vit_huge)",
+        help="Name of the model (dae_conv_tiny, dae_conv_small, dae_conv_base, dae_conv_large, dae_conv_huge)",
     )
     parser.add_argument(
         "--dataset",
@@ -317,11 +317,11 @@ if __name__ == "__main__":
             )
         )
 
-    if args.model_name not in dae_vit_models:
+    if args.model_name not in dae_conv_models:
         raise ValueError(
             colored(
-                "Provide a valid model \n(dae_vit_tiny, dae_vit_small, dae_vit_base, "
-                + "dae_vit_large, dae_vit_huge)",
+                "Provide a valid model \n(dae_conv_tiny, dae_conv_small, dae_conv_base, "
+                + "dae_conv_large, dae_conv_huge)",
                 "red",
             )
         )
