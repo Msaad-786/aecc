@@ -71,12 +71,9 @@ def train(
     model = CAEConv(
         in_channels=cfg.in_channels,
         img_size=cfg.img_size,
-        patch_size=cfg.patch_size,
-        emb_dim=cfg.emb_dim,
-        encoder_layer=cfg.encoder_layer,
-        encoder_head=cfg.encoder_head,
-        decoder_layer=cfg.decoder_layer,
-        decoder_head=cfg.decoder_head,
+        kernel_size = cfg.kernel_size,
+        encoder_channels = cfg.encoder_channels,
+        decoder_channels = cfg.decoder_channels,
         gate=gate,
         noise_factor=cfg.noise_factor,
     )
