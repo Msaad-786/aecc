@@ -17,9 +17,14 @@ from .decoderconv import ConvDecoder
 from .encoderconv import ConvEncoder
 
 
+import torch
+import torch.nn as nn
+
+from utils import RayleighChannel
+
 class CAEConv(nn.Module):
     """
-    CAE is a Denoising AutoEncoder model that leverages the Convolutional architecture. 
+    CAE is a Denoising AutoEncoder model that leverages the Convolutional architecture.
     It consists of an encoder and a decoder, both of which are based on convolutional layers.
     """
 
@@ -79,12 +84,17 @@ class CAEConv(nn.Module):
         features = self.encoder(img)
         noisy_features = self.rayleigh(features)
         
-        # Reshape the noisy features back to 4D tensor
+        # Calculate the correct size for reshaping
         batch_size = img.size(0)
-        feat_size = self.img_size // (2 ** len(self.encoder_channels))  # Assuming each conv layer halves the image size
         channels = self.encoder_channels[-1]
-        noisy_features = noisy_features.view(batch_size, channels, feat_size, feat_size)
+        feat_size = self.img_size // (2 ** len(self.encoder_channels))  # Assuming each conv layer halves the image size
 
+        # Check if the size is correct
+        expected_elements = batch_size * channels * feat_size * feat_size
+        if noisy_features.numel() != expected_elements:
+            raise RuntimeError(f"Shape mismatch: {noisy_features.numel()} elements cannot be reshaped to {[batch_size, channels, feat_size, feat_size]}")
+
+        noisy_features = noisy_features.view(batch_size, channels, feat_size, feat_size)
         predicted_img = self.decoder(noisy_features)
 
         return predicted_img
