@@ -40,27 +40,27 @@ class CAEConv(nn.Module):
         features = self.encoder(img)
         
         # Debug: Check encoder output shape
-        print(f"Encoder output shape: {features.shape}")
+        #print(f"Encoder output shape: {features.shape}")
         
         noisy_features = self.rayleigh(features)
         
         # Debug: Check shape after RayleighChannel
-        print(f"Noisy features shape: {noisy_features.shape}")
+        # print(f"Noisy features shape: {noisy_features.shape}")
 
-        # Calculate the correct size for reshaping
-        batch_size = img.size(0)
-        channels = self.encoder_channels[-1]
-        feat_size = self.img_size // (2 ** len(self.encoder_channels))  # Assuming each conv layer halves the image size
+        # # Calculate the correct size for reshaping
+        # batch_size = img.size(0)
+        # channels = self.encoder_channels[-1]
+        # feat_size = self.img_size // (2 ** len(self.encoder_channels))  # Assuming each conv layer halves the image size
 
-        # Debug information
-        print(f"Expected shape: {[batch_size, channels, feat_size, feat_size]}")
+        # # Debug information
+        # print(f"Expected shape: {[batch_size, channels, feat_size, feat_size]}")
 
-        # Check if the size is correct
-        expected_elements = batch_size * channels * feat_size * feat_size
-        if noisy_features.numel() != expected_elements:
-            raise RuntimeError(f"Shape mismatch: {noisy_features.numel()} elements cannot be reshaped to {[batch_size, channels, feat_size, feat_size]}")
+        # # Check if the size is correct
+        # expected_elements = batch_size * channels * feat_size * feat_size
+        # if noisy_features.numel() != expected_elements:
+        #     raise RuntimeError(f"Shape mismatch: {noisy_features.numel()} elements cannot be reshaped to {[batch_size, channels, feat_size, feat_size]}")
 
-        noisy_features = noisy_features.view(batch_size, channels, feat_size, feat_size)
+        # noisy_features = noisy_features.view(batch_size, channels, feat_size, feat_size)
         predicted_img = self.decoder(noisy_features)
 
         return predicted_img
