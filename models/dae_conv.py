@@ -56,9 +56,9 @@ class CAEConv(nn.Module):
         print(f"Expected shape: {[batch_size, channels, feat_size, feat_size]}")
 
         # Check if the size is correct
-        # expected_elements = batch_size * channels * feat_size * feat_size
-        # if noisy_features.numel() != expected_elements:
-        #     raise RuntimeError(f"Shape mismatch: {noisy_features.numel()} elements cannot be reshaped to {[batch_size, channels, feat_size, feat_size]}")
+        expected_elements = batch_size * channels * feat_size * feat_size
+        if noisy_features.numel() != expected_elements:
+            raise RuntimeError(f"Shape mismatch: {noisy_features.numel()} elements cannot be reshaped to {[batch_size, channels, feat_size, feat_size]}")
 
         noisy_features = noisy_features.view(batch_size, channels, feat_size, feat_size)
         predicted_img = self.decoder(noisy_features)
