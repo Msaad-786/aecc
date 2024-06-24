@@ -44,13 +44,15 @@ class CAEConv(nn.Module):
         
         noisy_features = self.rayleigh(features)
         
+        # Debug: Check shape after RayleighChannel
+        print(f"Noisy features shape: {noisy_features.shape}")
+
         # Calculate the correct size for reshaping
         batch_size = img.size(0)
         channels = self.encoder_channels[-1]
         feat_size = self.img_size // (2 ** len(self.encoder_channels))  # Assuming each conv layer halves the image size
 
         # Debug information
-        print(f"Noisy features shape: {noisy_features.shape}")
         print(f"Expected shape: {[batch_size, channels, feat_size, feat_size]}")
 
         # Check if the size is correct
