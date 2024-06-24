@@ -1,33 +1,10 @@
-"""
-MIT License:
-Copyright (c) 2023 Muhammad Umer
-
-Denoising Autoencoder Convolutional (DAE-Conv) models.
-
-The configurations follow the same principles as standard convolutional autoencoders for image denoising.
-
-"""
-
 import torch
 import torch.nn as nn
-
 from utils import RayleighChannel
-
 from .decoderconv import ConvDecoder
 from .encoderconv import ConvEncoder
 
-
-import torch
-import torch.nn as nn
-
-from utils import RayleighChannel
-
 class CAEConv(nn.Module):
-    """
-    CAE is a Denoising AutoEncoder model that leverages the Convolutional architecture.
-    It consists of an encoder and a decoder, both of which are based on convolutional layers.
-    """
-
     def __init__(
         self,
         in_channels=3,
@@ -38,18 +15,6 @@ class CAEConv(nn.Module):
         gate=nn.Sigmoid,
         noise_factor=0.2,
     ) -> None:
-        """
-        Initializes the CAE model with the given parameters.
-
-        Args:
-            in_channels (int, optional): The number of channels in the input image.
-            img_size (int, optional): The size (height and width) of the input image in pixels.
-            kernel_size (int, optional): The size of the convolution kernels.
-            encoder_channels (tuple of int, optional): The number of channels in each convolutional layer of the encoder.
-            decoder_channels (tuple of int, optional): The number of channels in each upsampling layer of the decoder.
-            gate (nn.Module, optional): The gate function used in the decoder.
-            noise_factor (float, optional): The factor by which the input image is noised before being passed to the encoder.
-        """
         super().__init__()
 
         self.encoder = ConvEncoder(
@@ -72,22 +37,21 @@ class CAEConv(nn.Module):
         self.encoder_channels = encoder_channels
 
     def forward(self, img):
-        """
-        Forward pass of the CAE.
-
-        Args:
-            img (torch.Tensor): Input image.
-
-        Returns:
-            torch.Tensor: Predicted image after the forward pass.
-        """
         features = self.encoder(img)
+        
+        # Debug: Check encoder output shape
+        print(f"Encoder output shape: {features.shape}")
+        
         noisy_features = self.rayleigh(features)
         
         # Calculate the correct size for reshaping
         batch_size = img.size(0)
         channels = self.encoder_channels[-1]
         feat_size = self.img_size // (2 ** len(self.encoder_channels))  # Assuming each conv layer halves the image size
+
+        # Debug information
+        print(f"Noisy features shape: {noisy_features.shape}")
+        print(f"Expected shape: {[batch_size, channels, feat_size, feat_size]}")
 
         # Check if the size is correct
         expected_elements = batch_size * channels * feat_size * feat_size
@@ -99,7 +63,7 @@ class CAEConv(nn.Module):
 
         return predicted_img
 
-
+# Example model instantiation
 def dae_conv_tiny(**kwargs):
     convmodel = CAEConv(
         encoder_channels=(32, 64, 128),
@@ -107,7 +71,6 @@ def dae_conv_tiny(**kwargs):
         **kwargs
     )
     return convmodel
-
 
 def dae_conv_small(**kwargs):
     convmodel = CAEConv(
@@ -117,7 +80,6 @@ def dae_conv_small(**kwargs):
     )
     return convmodel
 
-
 def dae_conv_base(**kwargs):
     convmodel = CAEConv(
         encoder_channels=(128, 256, 512),
@@ -125,7 +87,6 @@ def dae_conv_base(**kwargs):
         **kwargs
     )
     return convmodel
-
 
 def dae_conv_large(**kwargs):
     convmodel = CAEConv(
@@ -135,7 +96,6 @@ def dae_conv_large(**kwargs):
     )
     return convmodel
 
-
 def dae_conv_huge(**kwargs):
     convmodel = CAEConv(
         encoder_channels=(512, 1024, 2048),
@@ -143,7 +103,6 @@ def dae_conv_huge(**kwargs):
         **kwargs
     )
     return convmodel
-
 
 dae_conv_models = {
     "dae_conv_tiny": dae_conv_tiny,
