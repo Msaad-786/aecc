@@ -103,16 +103,8 @@ class RayleighChannel(nn.Module):
         Returns:
             torch.Tensor: output tensor after adding Rayleigh noise.
         """
-        # Save original shape
-        original_shape = x.shape
-
-        # Flatten the tensor
-        flat_x = x.view(x.size(0), -1)
-        
-        # Add Rayleigh noise
-        noise = self.sigma * torch.abs((torch.randn_like(flat_x) + 1j * torch.randn_like(flat_x)) / torch.sqrt(torch.tensor(2.0)))
-        noisy_flat_x = flat_x + noise
-
-        # Reshape back to original shape
-        return noisy_flat_x.view(original_shape)
+        return x + self.sigma * torch.abs(
+            (torch.randn_like(x) + 1j * torch.randn_like(x))
+            / torch.sqrt(torch.tensor(2.0))
+        )
     
